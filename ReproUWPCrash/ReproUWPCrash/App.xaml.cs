@@ -4,6 +4,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace ReproUWPCrash
@@ -16,18 +17,17 @@ namespace ReproUWPCrash
 		{
 		    InitializeComponent();
 		    MainPage = new ContentPage { Content = new ActivityIndicator { IsRunning = true, IsVisible = true, WidthRequest = 25, HeightRequest = 25 } };
-		    var schedulerProvider = new SchedulerProvider();
-            Observable.Timer(TimeSpan.Zero)
-		        .SubscribeOn(schedulerProvider.Background)
-		        .ObserveOn(schedulerProvider.Foreground)
-		        .Subscribe(_ =>
-		        {
-		            var stack = new Stack();
-		            MainPage = stack;
-		            var navPage = new ExNavigationPage(new ContentPage { Content = new Label { Text = "YO" } }, "");
-		            stack.Children.Add(navPage);
-		            _currentExNavigationPage = navPage;
-		        });
+		    Navigate();
+		}
+
+	    private async Task Navigate()
+	    {
+	        await Task.Delay(1000);
+	        var stack = new Stack();
+	        MainPage = stack;
+	        var navPage = new ExNavigationPage(new ContentPage { Content = new Label { Text = "YO" } }, "");
+	        stack.Children.Add(navPage);
+	        _currentExNavigationPage = navPage;
         }
 	}
 
