@@ -18,14 +18,16 @@ namespace ReproUWPCrash
 		    MainPage = new ContentPage { Content = new ActivityIndicator { IsRunning = true, IsVisible = true, WidthRequest = 25, HeightRequest = 25 } };
 		    var schedulerProvider = new SchedulerProvider();
             Observable.Timer(TimeSpan.Zero)
-		        .Subscribe(_ =>
+                .SubscribeOn(schedulerProvider.Background)
+                .ObserveOn(schedulerProvider.Foreground)
+                .Subscribe(_ =>
 		        {
 		            var stack = new Stack();
-		            MainPage = stack;
 		            var navPage = new ExNavigationPage(new ContentPage { Content = new Label { Text = "YO" } }, "");
 		            stack.Children.Add(navPage);
 		            _currentExNavigationPage = navPage;
-		        });
+		            MainPage = stack;
+                });
         }
 	}
 
